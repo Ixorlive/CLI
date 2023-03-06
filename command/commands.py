@@ -3,6 +3,7 @@ import subprocess
 import os
 from abc import ABC, abstractmethod
 from typing import List
+import shutil
 
 from environment.context_provider import ContextProvider
 
@@ -42,17 +43,15 @@ class Cat(CommandBase):
         output_stream: io.StringIO,
         error_stream: io.StringIO,
     ):
-        pass
-        # if len(args)
-        # filename = args[0]
-        # try:
-        #     with open()
-        # except FileNotFoundError as e:
-        #     # TODO попробовать не хардкодить инфу о команде
-        #     # cat: fil: No
-        #     # such
-        #     # file or directory
-        #     pass
+        if len(args) == 0:
+            error_stream.write("cat: file not specified")
+            return
+        filename = args[0]
+        try:
+            with open(filename, "r") as inf:
+                shutil.copyfileobj(inf, output_stream)
+        except FileNotFoundError:
+            error_stream.write(f"cat: {filename}: file not found")
 
 
 class Echo(CommandBase):
