@@ -49,12 +49,10 @@ class Lexer(Iterable):
     def current_token(self) -> Token:
         return self.tokens[self.index]
 
-    def _is_operator(self, token):
-        shell_operators = ['|', '<', '>', '&&', '||']
-        if token in shell_operators:
-            return True
-        try:
-            op_func = getattr(operator, token)
-            return callable(op_func)
-        except AttributeError:
-            return False
+    def _is_operator(self, token: str):
+        shell_operators = ['|', '<', '>', '&&', '||',
+                           '+', '-', '*', '/', '**', '%', '//',
+                           '<', '<=', '>', '>=', '==', '!=',
+                           '&', '|', '^', '~', '<<', '>>'
+                           ]
+        return token in shell_operators
