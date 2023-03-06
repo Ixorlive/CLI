@@ -79,4 +79,4 @@ def test_lexer(input_string: str, expected_tokens: List[Token]):
 )
 def test_lexer_exception(input_string: str):
     with pytest.raises(ValueError):
-        lexer = Lexer(input_string)
+        Lexer(input_string)
