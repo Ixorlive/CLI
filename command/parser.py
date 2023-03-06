@@ -10,9 +10,9 @@ class ParsingError(Exception):
 
 
 class Parser:
-    def __init__(self, command_factory: CommandFactory, lexer: Lexer):
+    def __init__(self, lexer: Lexer):
         self.lexer = lexer
-        self.command_factory = command_factory
+        self.command_factory = CommandFactory()
 
     def parse_program(self) -> List[Command]:
         commands: List[Command] = []

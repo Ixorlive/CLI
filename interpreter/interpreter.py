@@ -1,4 +1,5 @@
 from command.parser import Parser
+from command.lexer import Lexer
 from executor.executor import Executor
 
 
@@ -6,17 +7,22 @@ class Interpreter:
     # TODO название parser все-таки слишком отсылает к синтаксическому
     #  анализу при этом нельзя сказать, что parser ничего
     #  не делает кроме синтаксического анализа. Возможно стоит вернуться
-    #  к старому названию CommandReader?
-    def __init__(self, parser: Parser, executor: Executor):
-        self._parser = parser
+    #  к старому названию CommandReader? - да не пофиг?
+    def __init__(self, executor: Executor):
+        # TODO: На схеме Iterpreter не владеет Executor, он его использует
         self._executor = executor
 
     def run(self):
         # TODO еще над этим циклом и как из него выходить
         # TODO возможно стоит читать строчку аргумент пока кавычки не закрыты?
         while True:
-            print("$", end="")
+            print("$ ", end="")
             command_line = input()
-            commands = self._parser.parse_program(command_line)
-            self._executor.execute(commands)
+            # preprocessing
+            lexer = Lexer(command_line)
+            commands = Parser(lexer).parse_program()
+            # TODO: вот так
+            result = self._executor.execute(commands)
+            if result:
+                return
             print()

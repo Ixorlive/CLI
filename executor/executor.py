@@ -1,9 +1,10 @@
 from command.commands import Command
+from typing import List
 import sys
 
 
 class Executor:
-    def execute(self, commands: list[Command]):
+    def execute(self, commands: List[Command]):
         if len(commands) == 0:
             return
         commands[0].execute(
