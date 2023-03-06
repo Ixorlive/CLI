@@ -1,6 +1,5 @@
 import shlex
 from typing import Iterable, List, NamedTuple
-import operator
 
 
 class Token(NamedTuple):

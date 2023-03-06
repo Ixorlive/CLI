@@ -1,10 +1,10 @@
 from typing import Tuple
+
 import pytest
 
-from command.parser import Parser, ParsingError
-from command.lexer import Lexer
 from command.commands import *
-from command.command_factory import CommandFactory
+from command.lexer import Lexer
+from command.parser import Parser, ParsingError
 
 
 @pytest.mark.parametrize(
@@ -46,4 +46,4 @@ def test_parser(input_string: str, expected_commands: List[Tuple[Command, List[s
 def test_parser_exception(input_string: str):
     with pytest.raises(ParsingError):
         lexer = Lexer(input_string)
-        commands = Parser(lexer).parse_program()
+        Parser(lexer).parse_program()

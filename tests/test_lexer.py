@@ -1,4 +1,5 @@
-from typing import List, Tuple
+from typing import List
+
 import pytest
 
 from command.lexer import Lexer, Token

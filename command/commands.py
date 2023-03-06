@@ -1,9 +1,9 @@
 import io
-import subprocess
 import os
+import shutil
+import subprocess
 from abc import ABC, abstractmethod
 from typing import List
-import shutil
 
 from environment.context_provider import ContextProvider
 

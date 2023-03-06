@@ -1,7 +1,7 @@
-from command.parser import Parser
 from command.lexer import Lexer
-from executor.executor import Executor
+from command.parser import Parser
 from environment.context_provider import ContextProvider
+from executor.executor import Executor
 
 
 class Interpreter:
