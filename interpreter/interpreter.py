@@ -19,7 +19,7 @@ class Interpreter:
             command_line = input()
             # фаза 2: preprocessing
             lexer = Lexer(command_line)
-            commands = Parser(lexer).parse_program()
+            commands = Parser(lexer).parse_program(self._context_provider)
             result = self._executor.execute(commands)
             if result:
                 return

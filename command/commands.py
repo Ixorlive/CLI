@@ -102,7 +102,9 @@ class Assign(CommandBase):
         output_stream: io.StringIO,
         error_stream: io.StringIO,
     ):
-        pass
+        name = args[0]
+        value = args[1]
+        self._context_provider.set_variable(name, value)
 
 
 # TODO Что делать если запущен bash?
