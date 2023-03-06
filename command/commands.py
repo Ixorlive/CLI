@@ -62,7 +62,6 @@ class Echo(CommandBase):
         output_stream: io.StringIO,
         error_stream: io.StringIO,
     ):
-        # TODO обработка ошибок?
         output_stream.write(" ".join(args))
 
 
