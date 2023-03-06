@@ -9,11 +9,11 @@ from typing import List
 class CommandBase(ABC):
     @abstractmethod
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         pass
 
@@ -24,32 +24,32 @@ class Command:
         self._args = args
 
     def execute(
-            self,
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         self._base.execute(self._args, input_stream, output_stream, error_stream)
 
 
 class Cat(CommandBase):
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         pass
 
 
 class Echo(CommandBase):
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         # TODO обработка ошибок?
         output_stream.write(" ".join(args))
@@ -57,38 +57,37 @@ class Echo(CommandBase):
 
 class Wc(CommandBase):
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         pass
 
 
 class Pwd(CommandBase):
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         pass
 
 
 class Assign(CommandBase):
-
     def __init__(self, var_name: str, var_value: str):
         self.var_name = var_name
         self.var_value = var_value
 
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         pass
 
@@ -98,11 +97,11 @@ class External(CommandBase):
         self._command_name = command_name
 
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         completed_process = subprocess.run(
             [self._command_name] + args,

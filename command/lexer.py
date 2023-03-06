@@ -9,7 +9,6 @@ class Token(NamedTuple):
 
 
 class Lexer(Iterable):
-
     def __init__(self, input_line: str):
         self.tokens = self.tokenize(input_line)
         self.index = 0
@@ -20,23 +19,14 @@ class Lexer(Iterable):
         tokens = []
         for token in lexer:
             if token.isdigit():
-                tokens.append(Token(
-                    type='INTEGER',
-                    value=token)
-                )
+                tokens.append(Token(type="INTEGER", value=token))
             elif self._is_operator(token):
-                tokens.append(Token(
-                    type='OPERATOR',
-                    value=token)
-                )
+                tokens.append(Token(type="OPERATOR", value=token))
             else:
-                tokens.append(Token(
-                    type='IDENTIFIER',
-                    value=token)
-                )
+                tokens.append(Token(type="IDENTIFIER", value=token))
         return tokens
 
-    def __iter__(self) -> 'Lexer':
+    def __iter__(self) -> "Lexer":
         self.index = 0
         return self
 
@@ -50,9 +40,30 @@ class Lexer(Iterable):
         return self.tokens[self.index]
 
     def _is_operator(self, token: str):
-        shell_operators = ['|', '<', '>', '&&', '||',
-                           '+', '-', '*', '/', '**', '%', '//',
-                           '<', '<=', '>', '>=', '==', '!=',
-                           '&', '|', '^', '~', '<<', '>>'
-                           ]
+        shell_operators = [
+            "|",
+            "<",
+            ">",
+            "&&",
+            "||",
+            "+",
+            "-",
+            "*",
+            "/",
+            "**",
+            "%",
+            "//",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "==",
+            "!=",
+            "&",
+            "|",
+            "^",
+            "~",
+            "<<",
+            ">>",
+        ]
         return token in shell_operators

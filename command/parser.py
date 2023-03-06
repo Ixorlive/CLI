@@ -15,8 +15,8 @@ class Parser:
         self.command_factory = command_factory
 
     def parse_program(self) -> List[Command]:
-        commands = []
-        args = []
+        commands: List[Command] = []
+        args: List[str] = []
         command = None
         for token in self.lexer:
             if token.type == "OPERATOR":
@@ -35,11 +35,9 @@ class Parser:
         return commands
 
     def _parse_command(self, command_str: str) -> CommandBase:
-        if '=' in command_str:
-            variable = command_str.split('=')
+        if "=" in command_str:
+            variable = command_str.split("=")
             return self.command_factory.create_command_base(
-                command_name="=",
-                var_name=variable[0],
-                var_value=variable[1]
+                command_name="=", var_name=variable[0], var_value=variable[1]
             )
         return self.command_factory.create_command_base(command_str)
