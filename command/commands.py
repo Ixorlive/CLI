@@ -103,6 +103,7 @@ class External(CommandBase):
         output_stream: io.StringIO,
         error_stream: io.StringIO,
     ):
+        # TODO: Возможно стоит добавить в начало ["cmd", "/c", ...] или ["bash", ...], ибо пока не работает
         completed_process = subprocess.run(
             [self._command_name] + args,
             input=input_stream.read(),

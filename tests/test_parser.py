@@ -32,7 +32,7 @@ from command.command_factory import CommandFactory
 )
 def test_parser(input_string: str, expected_commands: List[Tuple[Command, List[str]]]):
     lexer = Lexer(input_string)
-    commands = Parser(CommandFactory(), lexer).parse_program()
+    commands = Parser(lexer).parse_program()
     assert len(commands) == len(expected_commands)
     for actual_command, expected_command in zip(commands, expected_commands):
         assert isinstance(actual_command._base, expected_command[0])
@@ -46,4 +46,4 @@ def test_parser(input_string: str, expected_commands: List[Tuple[Command, List[s
 def test_parser_exception(input_string: str):
     with pytest.raises(ParsingError):
         lexer = Lexer(input_string)
-        commands = Parser(CommandFactory(), lexer).parse_program()
+        commands = Parser(lexer).parse_program()
