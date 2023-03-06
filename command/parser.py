@@ -3,7 +3,6 @@ from typing import List
 from command.command_factory import CommandFactory
 from command.commands import Command, CommandBase
 from command.lexer import Lexer
-from environment.context_provider import ContextProvider
 
 
 class ParsingError(Exception):
@@ -11,11 +10,11 @@ class ParsingError(Exception):
 
 
 class Parser:
-    def __init__(self, lexer: Lexer):
+    def __init__(self, lexer: Lexer, command_factory: CommandFactory):
         self.lexer = lexer
-        self.command_factory = CommandFactory()
+        self.command_factory = command_factory
 
-    def parse_program(self, context_provider: ContextProvider) -> List[Command]:
+    def parse_program(self) -> List[Command]:
         commands: List[Command] = []
         args: List[str] = []
         command = None
@@ -28,22 +27,19 @@ class Parser:
                 else:
                     raise ParsingError("Unknown operator " + token.value)
             elif command is None:
-                command = self._parse_command(token.value, context_provider)
+                command = self._parse_command(token.value)
             else:
                 args.append(token.value)
         if command is not None:
             commands.append(Command(command, args))
         return commands
 
-    def _parse_command(
-        self, command_str: str, context_provider: ContextProvider
-    ) -> CommandBase:
+    def _parse_command(self, command_str: str) -> CommandBase:
         if "=" in command_str:
             variable = command_str.split("=")
             return self.command_factory.create_command_base(
                 command_name="=",
                 var_name=variable[0],
                 var_value=variable[1],
-                context_provider=context_provider,
             )
         return self.command_factory.create_command_base(command_str)

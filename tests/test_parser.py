@@ -5,6 +5,7 @@ import pytest
 from command.commands import *
 from command.lexer import Lexer
 from command.parser import Parser, ParsingError
+from command.command_factory import CommandFactory
 from environment.context_provider import ContextProvider
 
 
@@ -33,7 +34,9 @@ from environment.context_provider import ContextProvider
 )
 def test_parser(input_string: str, expected_commands: List[Tuple[Command, List[str]]]):
     lexer = Lexer(input_string)
-    commands = Parser(lexer).parse_program(ContextProvider())
+    context_provider = ContextProvider()
+    command_factory = CommandFactory(context_provider)
+    commands = Parser(lexer, command_factory).parse_program()
     assert len(commands) == len(expected_commands)
     for actual_command, expected_command in zip(commands, expected_commands):
         assert isinstance(actual_command._base, expected_command[0])
@@ -47,4 +50,6 @@ def test_parser(input_string: str, expected_commands: List[Tuple[Command, List[s
 def test_parser_exception(input_string: str):
     with pytest.raises(ParsingError):
         lexer = Lexer(input_string)
-        Parser(lexer).parse_program(ContextProvider())
+        context_provider = ContextProvider()
+        command_factory = CommandFactory(context_provider)
+        Parser(lexer, command_factory).parse_program()

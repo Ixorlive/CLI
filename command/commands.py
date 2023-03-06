@@ -3,13 +3,12 @@ import os
 import shutil
 import subprocess
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, TextIO
 
 from environment.context_provider import ContextProvider
 
 
 class CommandBase(ABC):
-    # TODO отразить поток ошибок в архитектуре
     @abstractmethod
     def execute(
         self,
@@ -115,13 +114,16 @@ class External(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
-        # TODO: Возможно стоит добавить в начало ["cmd", "/c", ...] или ["bash", ...], ибо пока не работает
+        path_to_command = shutil.which(self._command_name)
+        if path_to_command is None:
+            error_stream.write(f"{self._command_name}: command not found")
+            return
         completed_process = subprocess.run(
-            [self._command_name] + args,
+            [path_to_command] + args,
             input=input_stream.read(),
             capture_output=True,
         )
