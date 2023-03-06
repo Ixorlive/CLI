@@ -3,12 +3,14 @@ import subprocess
 
 from abc import ABC, abstractmethod
 
+from typing import List
+
 
 class CommandBase(ABC):
     @abstractmethod
     def execute(
         self,
-        args: list[str],
+        args: List[str],
         input_stream: io.StringIO,
         output_stream: io.StringIO,
         error_stream: io.StringIO,
@@ -17,7 +19,7 @@ class CommandBase(ABC):
 
 
 class Command:
-    def __init__(self, base: CommandBase, args: list[str]):
+    def __init__(self, base: CommandBase, args: List[str]):
         self._base = base
         self._args = args
 
@@ -33,7 +35,7 @@ class Command:
 class Cat(CommandBase):
     def execute(
         self,
-        args: list[str],
+        args: List[str],
         input_stream: io.StringIO,
         output_stream: io.StringIO,
         error_stream: io.StringIO,
@@ -44,7 +46,7 @@ class Cat(CommandBase):
 class Echo(CommandBase):
     def execute(
         self,
-        args: list[str],
+        args: List[str],
         input_stream: io.StringIO,
         output_stream: io.StringIO,
         error_stream: io.StringIO,
@@ -56,7 +58,7 @@ class Echo(CommandBase):
 class Wc(CommandBase):
     def execute(
         self,
-        args: list[str],
+        args: List[str],
         input_stream: io.StringIO,
         output_stream: io.StringIO,
         error_stream: io.StringIO,
@@ -67,7 +69,7 @@ class Wc(CommandBase):
 class Pwd(CommandBase):
     def execute(
         self,
-        args: list[str],
+        args: List[str],
         input_stream: io.StringIO,
         output_stream: io.StringIO,
         error_stream: io.StringIO,
@@ -81,7 +83,7 @@ class External(CommandBase):
 
     def execute(
         self,
-        args: list[str],
+        args: List[str],
         input_stream: io.StringIO,
         output_stream: io.StringIO,
         error_stream: io.StringIO,
