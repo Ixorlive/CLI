@@ -58,3 +58,13 @@ def test_lexer(input_string: str, expected_tokens: List[Token]):
     lexer = Lexer(input_string)
     actual_tokens = list(lexer)
     assert actual_tokens == expected_tokens
+
+
+@pytest.mark.parametrize("input_string", [
+    "echo | 'invalid use of quotes",
+    "echo \"invalid use of quotes",
+    "echo 'hello world\""
+])
+def test_lexer_exception(input_string: str):
+    with pytest.raises(ValueError):
+        lexer = Lexer(input_string)
