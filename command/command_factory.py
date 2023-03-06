@@ -13,6 +13,9 @@ class CommandFactory:
             return commands.Pwd()
         elif command_name == "=":
             return commands.Assign(
-                var_name=args["var_name"], var_value=args["var_value"]
+                # TODO другой формат работы с аргументами assign
+                var_name=args["var_name"],
+                var_value=args["var_value"],
+                context_provider=args["context_provider"],
             )
         return commands.External(command_name)

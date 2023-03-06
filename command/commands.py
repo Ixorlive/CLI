@@ -1,12 +1,14 @@
 import io
 import subprocess
-
+import os
 from abc import ABC, abstractmethod
-
 from typing import List
+
+from environment.context_provider import ContextProvider
 
 
 class CommandBase(ABC):
+    # TODO отразить поток ошибок в архитектуре
     @abstractmethod
     def execute(
         self,
@@ -41,6 +43,16 @@ class Cat(CommandBase):
         error_stream: io.StringIO,
     ):
         pass
+        # if len(args)
+        # filename = args[0]
+        # try:
+        #     with open()
+        # except FileNotFoundError as e:
+        #     # TODO попробовать не хардкодить инфу о команде
+        #     # cat: fil: No
+        #     # such
+        #     # file or directory
+        #     pass
 
 
 class Echo(CommandBase):
@@ -74,13 +86,16 @@ class Pwd(CommandBase):
         output_stream: io.StringIO,
         error_stream: io.StringIO,
     ):
-        pass
+        output_stream.write(os.getcwd())
 
 
 class Assign(CommandBase):
-    def __init__(self, var_name: str, var_value: str):
-        self.var_name = var_name
-        self.var_value = var_value
+    def __init__(
+        self, var_name: str, var_value: str, context_provider: ContextProvider
+    ):
+        self._var_name = var_name
+        self._var_value = var_value
+        self._context_provider = context_provider
 
     def execute(
         self,
@@ -92,6 +107,7 @@ class Assign(CommandBase):
         pass
 
 
+# TODO Что делать если запущен bash?
 class External(CommandBase):
     def __init__(self, command_name: str):
         self._command_name = command_name
