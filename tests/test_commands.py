@@ -11,7 +11,8 @@ from environment.context_provider import ContextProvider
     "args, expected_output, expected_errors, expected_return_code",
     [
         ([], "", "cat: file not specified\n", commands.INTERNAL_COMMAND_ERROR),
-        (["data/cat_data.txt"], "aaa\nbbb\n", "", commands.CODE_OK),
+        (["tests/data/cat_data.txt"], "aaa\nbbb\n", "", commands.CODE_OK),
+        (["not_file"], "", "cat: not_file: file not found\n", commands.INTERNAL_COMMAND_ERROR),
     ],
 )
 def test_cat(args, expected_output, expected_errors, expected_return_code):
