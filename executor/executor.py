@@ -1,6 +1,4 @@
 import sys
-from typing import List
-
 from command.commands import Command
 from command.command_base import *
 
