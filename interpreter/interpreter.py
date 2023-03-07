@@ -1,3 +1,5 @@
+import sys
+
 from command.lexer import Lexer
 from command.parser import Parser, ParsingError
 from command.command_factory import CommandFactory
@@ -21,4 +23,6 @@ class Interpreter:
                 if result == executor.CODE_EXIT:
                     return
             except ParsingError as e:
-                print(e)
+                print(e, file=sys.stderr)
+            except Exception as e:
+                print("unexpected error", file=sys.stderr)
