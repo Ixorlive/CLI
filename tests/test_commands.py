@@ -12,7 +12,12 @@ from environment.context_provider import ContextProvider
     [
         ([], "", "cat: file not specified\n", commands.INTERNAL_COMMAND_ERROR),
         (["tests/data/cat_data.txt"], "aaa\nbbb\n", "", commands.CODE_OK),
-        (["not_file"], "", "cat: not_file: file not found\n", commands.INTERNAL_COMMAND_ERROR),
+        (
+            ["not_file"],
+            "",
+            "cat: not_file: file not found\n",
+            commands.INTERNAL_COMMAND_ERROR,
+        ),
     ],
 )
 def test_cat(args, expected_output, expected_errors, expected_return_code):
@@ -106,3 +111,19 @@ def test_assign():
     assert output_stream.read() == ""
     error_stream.seek(0)
     assert error_stream.readline() == ""
+
+
+def test_command_executed_successfully():
+    if os.name == "nt":
+        return
+    external = commands.External("cat")
+    args = ["tests/data/cat_data.txt"]
+    input_stream = io.StringIO()
+    output_stream = io.StringIO()
+    error_stream = io.StringIO()
+    result = external.execute(args, input_stream, output_stream, error_stream)
+    assert result == commands.CODE_OK
+    output_stream.seek(0)
+    assert output_stream.read() == "Hello World\n"
+    error_stream.seek(0)
+    assert error_stream.read() == ""
