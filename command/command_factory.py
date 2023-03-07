@@ -15,6 +15,8 @@ class CommandFactory:
             return commands.Wc()
         elif command_name == "pwd":
             return commands.Pwd()
+        elif command_name == "exit":
+            return commands.Exit()
         elif command_name == "=":
             return commands.Assign(
                 var_name=args["var_name"],

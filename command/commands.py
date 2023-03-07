@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 from typing import List, TextIO
 
 from environment.context_provider import ContextProvider
+from executor import executor
 
 
 class CommandBase(ABC):
@@ -15,7 +16,7 @@ class CommandBase(ABC):
         input_stream: TextIO,
         output_stream: TextIO,
         error_stream: TextIO,
-    ):
+    ) -> int:
         pass
 
 
@@ -29,8 +30,8 @@ class Command:
         input_stream: TextIO,
         output_stream: TextIO,
         error_stream: TextIO,
-    ):
-        self._base.execute(self._args, input_stream, output_stream, error_stream)
+    ) -> int:
+        return self._base.execute(self._args, input_stream, output_stream, error_stream)
 
 
 class Cat(CommandBase):
@@ -40,16 +41,17 @@ class Cat(CommandBase):
         input_stream: TextIO,
         output_stream: TextIO,
         error_stream: TextIO,
-    ):
+    ) -> int:
         if len(args) == 0:
             error_stream.write("cat: file not specified")
-            return
+            return executor.COMMAND_ERROR
         filename = args[0]
         try:
             with open(filename, "r") as inf:
                 shutil.copyfileobj(inf, output_stream)
         except FileNotFoundError:
             error_stream.write(f"cat: {filename}: file not found")
+            return executor.COMMAND_ERROR
 
 
 class Echo(CommandBase):
@@ -59,8 +61,9 @@ class Echo(CommandBase):
         input_stream: TextIO,
         output_stream: TextIO,
         error_stream: TextIO,
-    ):
+    ) -> int:
         output_stream.write(" ".join(args))
+        return executor.CODE_OK
 
 
 class Wc(CommandBase):
@@ -70,7 +73,7 @@ class Wc(CommandBase):
         input_stream: TextIO,
         output_stream: TextIO,
         error_stream: TextIO,
-    ):
+    ) -> int:
         pass
 
 
@@ -81,8 +84,20 @@ class Pwd(CommandBase):
         input_stream: TextIO,
         output_stream: TextIO,
         error_stream: TextIO,
-    ):
+    ) -> int:
         output_stream.write(os.getcwd())
+        return executor.CODE_OK
+
+
+class Exit(CommandBase):
+    def execute(
+        self,
+        args: List[str],
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
+    ) -> int:
+        return executor.CODE_EXIT
 
 
 class Assign(CommandBase):
@@ -99,10 +114,11 @@ class Assign(CommandBase):
         input_stream: TextIO,
         output_stream: TextIO,
         error_stream: TextIO,
-    ):
+    ) -> int:
         name = args[0]
         value = args[1]
         self._context_provider.set_variable(name, value)
+        return executor.CODE_OK
 
 
 # TODO Что делать если запущен bash?
@@ -116,15 +132,16 @@ class External(CommandBase):
         input_stream: TextIO,
         output_stream: TextIO,
         error_stream: TextIO,
-    ):
+    ) -> int:
         # TODO чтение из input_stream пока не работает
         path_to_command = shutil.which(self._command_name)
         if path_to_command is None:
             error_stream.write(f"{self._command_name}: command not found")
-            return
+            return executor.COMMAND_ERROR
         completed_process = subprocess.run(
             [path_to_command] + args,
             capture_output=True,
         )
         output_stream.write(completed_process.stdout.decode())
         error_stream.write(completed_process.stderr.decode())
+        return executor.CODE_OK
