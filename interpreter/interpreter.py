@@ -7,11 +7,9 @@ from executor import executor
 class Interpreter:
     def __init__(self, executor: executor.Executor, command_factory: CommandFactory):
         self._executor = executor
-        # TODO отразить на схеме
         self._command_factory = command_factory
 
     def run(self):
-        # TODO еще над этим циклом и как из него выходить
         # TODO возможно стоит читать строчку аргумент пока кавычки не закрыты?
         while True:
             print("$ ", end="")
@@ -27,4 +25,3 @@ class Interpreter:
                 print(e)
             except Exception as e:
                 print()
-            print()

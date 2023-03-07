@@ -3,9 +3,10 @@ from typing import List
 
 from command.commands import Command
 
+# internal result codes
 CODE_OK = 0
-CODE_EXIT = 1
-COMMAND_ERROR = 2
+CODE_EXIT = -1
+INTERNAL_COMMAND_ERROR = -2
 
 
 class Executor:

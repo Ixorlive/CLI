@@ -115,9 +115,7 @@ class Assign(CommandBase):
         output_stream: TextIO,
         error_stream: TextIO,
     ) -> int:
-        name = args[0]
-        value = args[1]
-        self._context_provider.set_variable(name, value)
+        self._context_provider.set_variable(self._var_name, self._var_value)
         return executor.CODE_OK
 
 
@@ -144,4 +142,4 @@ class External(CommandBase):
         )
         output_stream.write(completed_process.stdout.decode())
         error_stream.write(completed_process.stderr.decode())
-        return executor.CODE_OK
+        return completed_process.returncode
