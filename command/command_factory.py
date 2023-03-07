@@ -3,7 +3,6 @@ from environment.context_provider import ContextProvider
 
 
 class CommandFactory:
-
     def __init__(self, context: ContextProvider):
         self.context_provider = context
 
@@ -18,6 +17,8 @@ class CommandFactory:
             return commands.Pwd()
         elif command_name == "=":
             return commands.Assign(
-                self.context_provider, var_name=args["var_name"], var_value=args["var_value"]
+                self.context_provider,
+                var_name=args["var_name"],
+                var_value=args["var_value"],
             )
         return commands.External(command_name)

@@ -17,14 +17,9 @@ class Command:
         self._args = args
 
     def execute(
-            self,
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         self._base.execute(self._args, input_stream, output_stream, error_stream)
-
-
-
-
-

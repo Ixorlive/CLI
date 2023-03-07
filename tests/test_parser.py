@@ -16,17 +16,17 @@ from command.command_factory import CommandFactory
         ("echo text.txt | cat -n", [(Echo, ["text.txt"]), (Cat, ["-n"])]),
         ("file=text", [(Assign, [])]),
         (
-                "cat test | echo test | wc test test test | cat test",
-                [
-                    (Cat, ["test"]),
-                    (Echo, ["test"]),
-                    (Wc, ["test", "test", "test"]),
-                    (Cat, ["test"]),
-                ],
+            "cat test | echo test | wc test test test | cat test",
+            [
+                (Cat, ["test"]),
+                (Echo, ["test"]),
+                (Wc, ["test", "test", "test"]),
+                (Cat, ["test"]),
+            ],
         ),
         (
-                "pwd test 'test test test' | echo",
-                [(Pwd, ["test", "test test test"]), (Echo, [])],
+            "pwd test 'test test test' | echo",
+            [(Pwd, ["test", "test test test"]), (Echo, [])],
         ),
     ],
 )

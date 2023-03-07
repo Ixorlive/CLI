@@ -1,4 +1,4 @@
-from parsing.parser import Parser
+from parsing.parser import Parser, ParsingError
 from parsing.lexer import Lexer
 from executor.executor import Executor
 from environment.context_provider import ContextProvider
@@ -16,10 +16,15 @@ class Interpreter:
             print("$ ", end="")
             command_line = input()
             # preprocessing
-            lexer = Lexer(command_line)
-            commands = Parser(self.command_factory, lexer).parse_program()
-            # TODO: return false if command is "exit"
-            result = self._executor.execute(commands)
-            if result:
-                return
-            print()
+            try:
+                lexer = Lexer(command_line)
+                commands = Parser(self.command_factory, lexer).parse_program()
+                if self._executor.execute(commands):
+                    return
+                print()
+            except ValueError as ve:
+                print(f"Error with lexer: {ve}")
+            except ParsingError as pe:
+                print(f"Parsing error {pe}")
+            except Exception as e:
+                print(f"Error: {e}")

@@ -19,26 +19,29 @@ class FileResult(NamedTuple):
 
 
 class Wc(CommandBase):
-
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         if not args:
             text_statistic = self._wc_base(input_stream.read())
             output_stream.write(
-                "{:>7}".format(str(text_statistic[0]))
-                + "{:>8}".format(str(text_statistic[1]))
-                + "{:>8}".format(str(text_statistic[2]))
+                "{:>7}".format(str(text_statistic.count_lines))
+                + "{:>8}".format(str(text_statistic.count_words))
+                + "{:>8}".format(str(text_statistic.utf8len))
             )
             return
 
         files_statistic = self._wc_files(args)
         # last row is "total" - it have max value -> max len (or result have only one file)
-        max_len = files_statistic[-1].text_result.utf8len if files_statistic[-1] is FileResult else 0
+        max_len = (
+            len(str(files_statistic[-1].text_result.utf8len))
+            if isinstance(files_statistic[-1], FileResult)
+            else 0
+        )
         for file_statistic in files_statistic:
             if isinstance(file_statistic, str):
                 output_stream.write(file_statistic)
@@ -47,7 +50,7 @@ class Wc(CommandBase):
                     output_stream.write(f"{file_statistic.text_result[j]:{max_len}} ")
                 output_stream.write(file_statistic.filename)
             if file_statistic is not files_statistic[-1]:
-                output_stream.write('\n')
+                output_stream.write("\n")
 
     def _wc_base(self, text: str) -> TextResult:
         count_lines = 0
@@ -67,16 +70,20 @@ class Wc(CommandBase):
 
     def _wc_files(self, file_paths: List[str]) -> List[FileResult]:
         all_results = []
-        total = TextResult(0, 0, 0)
+        total = [0, 0, 0]
         for file_path in file_paths:
             try:
                 with open(file_path, "r") as file:
                     result = self._wc_base(file.read())
                     all_results.append(FileResult(file_path, result))
-                    for i in range(3):
-                        total[i] += result[i]
+
+                    total[0] += result.count_words
+                    total[1] += result.count_lines
+                    total[2] += result.utf8len
             except FileNotFoundError:
                 all_results.append(f"wc: {file_path}: No such file or directory")
         if len(file_paths) > 1:
-            all_results.append(FileResult("total", total))
+            all_results.append(
+                FileResult("total", TextResult(total[0], total[1], total[2]))
+            )
         return all_results
