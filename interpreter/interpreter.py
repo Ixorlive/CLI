@@ -12,8 +12,7 @@ class Interpreter:
     def run(self):
         # TODO возможно стоит читать строчку аргумент пока кавычки не закрыты?
         while True:
-            print("$ ", end="")
-            command_line = input()
+            command_line = input("$ ")
             # фаза 2: preprocessing
             try:
                 lexer = Lexer(command_line)
@@ -23,5 +22,3 @@ class Interpreter:
                     return
             except ParsingError as e:
                 print(e)
-            except Exception as e:
-                print()
