@@ -3,8 +3,8 @@ from typing import Tuple
 import pytest
 
 from command.commands import *
-from command.lexer import Lexer
-from command.parser import Parser, ParsingError
+from parsing.lexer import Lexer
+from parsing.parser import Parser, ParsingError
 from command.command_factory import CommandFactory
 from environment.context_provider import ContextProvider
 

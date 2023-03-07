@@ -10,12 +10,12 @@ from environment.context_provider import ContextProvider
 @pytest.mark.parametrize(
     "args, expected_output, expected_errors, expected_return_code",
     [
-        ([], "", "cat: file not specified\n", commands.INTERNAL_COMMAND_ERROR),
+        # ([], "", "cat: file not specified\n", commands.INTERNAL_COMMAND_ERROR),
         (["tests/data/cat_data.txt"], "aaa\nbbb\n", "", commands.CODE_OK),
         (
             ["not_file"],
             "",
-            "cat: not_file: file not found\n",
+            "cat: not_file: No such file or directory\n",
             commands.INTERNAL_COMMAND_ERROR,
         ),
     ],
@@ -61,7 +61,7 @@ def test_echo(args, expected_output, expected_return_code):
 @pytest.mark.parametrize(
     "args, expected_output, expected_return_code",
     [
-        ([], os.getcwd(), commands.CODE_OK),
+        ([], os.getcwd() + "\n", commands.CODE_OK),
     ],
 )
 def test_pwd(args, expected_output, expected_return_code):

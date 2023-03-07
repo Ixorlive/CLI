@@ -13,6 +13,10 @@ from command.wc import Wc
 
 # =======================================
 
+CODE_OK = 0
+CODE_EXIT = -1
+INTERNAL_COMMAND_ERROR = -2
+
 
 class Command:
     def __init__(self, base: CommandBase, args: List[str]):

@@ -2,7 +2,7 @@ from typing import List
 
 import pytest
 
-from command.lexer import Lexer, Token
+from parsing.lexer import Lexer, Token
 
 
 @pytest.mark.parametrize(
