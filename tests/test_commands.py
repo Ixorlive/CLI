@@ -11,7 +11,7 @@ from environment.context_provider import ContextProvider
     "args, expected_output, expected_errors, expected_return_code",
     [
         ([], "", "cat: file not specified\n", commands.INTERNAL_COMMAND_ERROR),
-        (["data/cat_data.txt"], "aaa\nbbb", "", commands.CODE_OK),
+        (["data/cat_data.txt"], "aaa\nbbb\n", "", commands.CODE_OK),
     ],
 )
 def test_cat(args, expected_output, expected_errors, expected_return_code):
@@ -19,7 +19,10 @@ def test_cat(args, expected_output, expected_errors, expected_return_code):
     input_stream = io.StringIO()
     output_stream = io.StringIO()
     error_stream = io.StringIO()
-    assert command.execute(args, input_stream, output_stream, error_stream) == expected_return_code
+    assert (
+        command.execute(args, input_stream, output_stream, error_stream)
+        == expected_return_code
+    )
     output_stream.seek(0)
     assert output_stream.read() == expected_output
     error_stream.seek(0)
@@ -39,11 +42,14 @@ def test_echo(args, expected_output, expected_return_code):
     input_stream = io.StringIO()
     output_stream = io.StringIO()
     error_stream = io.StringIO()
-    assert command.execute(args, input_stream, output_stream, error_stream) == expected_return_code
+    assert (
+        command.execute(args, input_stream, output_stream, error_stream)
+        == expected_return_code
+    )
     output_stream.seek(0)
     assert output_stream.read() == expected_output
     error_stream.seek(0)
-    assert error_stream.readline() == ''
+    assert error_stream.readline() == ""
 
 
 @pytest.mark.parametrize(
@@ -57,11 +63,14 @@ def test_pwd(args, expected_output, expected_return_code):
     input_stream = io.StringIO()
     output_stream = io.StringIO()
     error_stream = io.StringIO()
-    assert command.execute(args, input_stream, output_stream, error_stream) == expected_return_code
+    assert (
+        command.execute(args, input_stream, output_stream, error_stream)
+        == expected_return_code
+    )
     output_stream.seek(0)
     assert output_stream.read() == expected_output
     error_stream.seek(0)
-    assert error_stream.readline() == ''
+    assert error_stream.readline() == ""
 
 
 def test_exit():
@@ -69,11 +78,14 @@ def test_exit():
     input_stream = io.StringIO()
     output_stream = io.StringIO()
     error_stream = io.StringIO()
-    assert command.execute([], input_stream, output_stream, error_stream) == commands.CODE_EXIT
+    assert (
+        command.execute([], input_stream, output_stream, error_stream)
+        == commands.CODE_EXIT
+    )
     output_stream.seek(0)
-    assert output_stream.read() == ''
+    assert output_stream.read() == ""
     error_stream.seek(0)
-    assert error_stream.readline() == ''
+    assert error_stream.readline() == ""
 
 
 def test_assign():
@@ -84,9 +96,12 @@ def test_assign():
     input_stream = io.StringIO()
     output_stream = io.StringIO()
     error_stream = io.StringIO()
-    assert command.execute([], input_stream, output_stream, error_stream) == commands.CODE_OK
+    assert (
+        command.execute([], input_stream, output_stream, error_stream)
+        == commands.CODE_OK
+    )
     assert context_provider.get_variable(var_name) == var_value
     output_stream.seek(0)
-    assert output_stream.read() == ''
+    assert output_stream.read() == ""
     error_stream.seek(0)
-    assert error_stream.readline() == ''
+    assert error_stream.readline() == ""
