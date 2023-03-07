@@ -5,11 +5,11 @@ from typing import List
 
 class Cat(CommandBase):
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         if not args:
             output_stream.write(input_stream.read())

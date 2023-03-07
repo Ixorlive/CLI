@@ -11,10 +11,10 @@ class Assign(CommandBase):
         self.var_value = var_value
 
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         self.context.set_variable(self.var_name, self.var_value)

@@ -9,11 +9,11 @@ class External(CommandBase):
         self._command_name = command_name
 
     def execute(
-            self,
-            args: List[str],
-            input_stream: io.StringIO,
-            output_stream: io.StringIO,
-            error_stream: io.StringIO,
+        self,
+        args: List[str],
+        input_stream: io.StringIO,
+        output_stream: io.StringIO,
+        error_stream: io.StringIO,
     ):
         # TODO: Возможно стоит добавить в начало ["cmd", "/c", ...] или ["bash", ...], ибо пока не работает
         completed_process = subprocess.run(
