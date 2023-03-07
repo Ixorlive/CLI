@@ -2,9 +2,8 @@ import os
 import shutil
 import subprocess
 import multiprocessing
-import io
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, TextIO
 
 from environment.context_provider import ContextProvider
 
@@ -19,9 +18,9 @@ class CommandBase(ABC):
     def execute(
         self,
         args: List[str],
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         pass
 
@@ -33,9 +32,9 @@ class Command:
 
     def execute(
         self,
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         return self._base.execute(self._args, input_stream, output_stream, error_stream)
 
@@ -44,9 +43,9 @@ class Cat(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         if len(args) == 0:
             error_stream.write("cat: file not specified\n")
@@ -64,9 +63,9 @@ class Echo(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         output_stream.write(" ".join(args) + "\n")
         return CODE_OK
@@ -76,9 +75,9 @@ class Wc(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         pass
 
@@ -87,9 +86,9 @@ class Pwd(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         output_stream.write(os.getcwd())
         return CODE_OK
@@ -99,9 +98,9 @@ class Exit(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         return CODE_EXIT
 
@@ -117,9 +116,9 @@ class Assign(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         self._context_provider.set_variable(self._var_name, self._var_value)
         return CODE_OK
@@ -133,9 +132,9 @@ class External(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.FileIO,
-        output_stream: io.FileIO,
-        error_stream: io.FileIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         path_to_command = shutil.which(self._command_name)
         if path_to_command is None:
