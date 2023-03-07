@@ -1,4 +1,3 @@
-import io
 import os
 import shutil
 import subprocess
@@ -13,9 +12,9 @@ class CommandBase(ABC):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
         pass
 
@@ -27,9 +26,9 @@ class Command:
 
     def execute(
         self,
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
         self._base.execute(self._args, input_stream, output_stream, error_stream)
 
@@ -38,9 +37,9 @@ class Cat(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
         if len(args) == 0:
             error_stream.write("cat: file not specified")
@@ -57,9 +56,9 @@ class Echo(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
         output_stream.write(" ".join(args))
 
@@ -68,9 +67,9 @@ class Wc(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
         pass
 
@@ -79,9 +78,9 @@ class Pwd(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
         output_stream.write(os.getcwd())
 
@@ -97,9 +96,9 @@ class Assign(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
         name = args[0]
         value = args[1]
@@ -118,14 +117,14 @@ class External(CommandBase):
         output_stream: TextIO,
         error_stream: TextIO,
     ):
+        # TODO чтение из input_stream пока не работает
         path_to_command = shutil.which(self._command_name)
         if path_to_command is None:
             error_stream.write(f"{self._command_name}: command not found")
             return
         completed_process = subprocess.run(
             [path_to_command] + args,
-            input=input_stream.read(),
             capture_output=True,
         )
-        output_stream.write(completed_process.stdout)
-        error_stream.write(completed_process.stderr)
+        output_stream.write(completed_process.stdout.decode())
+        error_stream.write(completed_process.stderr.decode())
