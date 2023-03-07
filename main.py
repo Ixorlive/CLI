@@ -7,5 +7,5 @@ if __name__ == "__main__":
     context_provider = ContextProvider()
     command_factory = CommandFactory(context_provider)
     executor = Executor()
-    interpreter = Interpreter(executor, context_provider)
+    interpreter = Interpreter(executor, command_factory)
     interpreter.run()
