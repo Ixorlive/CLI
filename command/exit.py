@@ -1,7 +1,7 @@
 from command.command_base import *
 
 
-class Echo(CommandBase):
+class Exit(CommandBase):
     def execute(
         self,
         args: List[str],
@@ -9,5 +9,4 @@ class Echo(CommandBase):
         output_stream: TextIO,
         error_stream: TextIO,
     ) -> int:
-        output_stream.write(" ".join(args) + "\n")
-        return CODE_OK
+        return CODE_EXIT

@@ -1,6 +1,5 @@
-import io
-from command.command_base import CommandBase
-from typing import List, NamedTuple
+from typing import NamedTuple
+from command.command_base import *
 
 
 def utf8len(s):
@@ -22,9 +21,9 @@ class Wc(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ):
         if not args:
             text_statistic = self._wc_base(input_stream.read())
@@ -33,24 +32,26 @@ class Wc(CommandBase):
                 + "{:>8}".format(str(text_statistic.count_words))
                 + "{:>8}".format(str(text_statistic.utf8len))
             )
-            return
-
-        files_statistic = self._wc_files(args)
-        # last row is "total" - it have max value -> max len (or result have only one file)
-        max_len = (
-            len(str(files_statistic[-1].text_result.utf8len))
-            if isinstance(files_statistic[-1], FileResult)
-            else 0
-        )
-        for file_statistic in files_statistic:
-            if isinstance(file_statistic, str):
-                output_stream.write(file_statistic)
-            else:
-                for j in range(3):
-                    output_stream.write(f"{file_statistic.text_result[j]:{max_len}} ")
-                output_stream.write(file_statistic.filename)
-            if file_statistic is not files_statistic[-1]:
+            output_stream.write('\n')
+        else:
+            files_statistic = self._wc_files(args)
+            # last row is "total" - it have max value -> max len (or result have only one file)
+            max_len = (
+                len(str(files_statistic[-1].text_result.utf8len))
+                if isinstance(files_statistic[-1], FileResult)
+                else 0
+            )
+            for file_statistic in files_statistic:
+                if isinstance(file_statistic, str):
+                    output_stream.write(file_statistic)
+                else:
+                    for j in range(3):
+                        output_stream.write(
+                            f"{file_statistic.text_result[j]:{max_len}} "
+                        )
+                    output_stream.write(file_statistic.filename)
                 output_stream.write("\n")
+        return CODE_OK
 
     def _wc_base(self, text: str) -> TextResult:
         count_lines = 0

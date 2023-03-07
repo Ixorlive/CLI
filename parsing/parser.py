@@ -2,7 +2,7 @@ from typing import List
 
 from command.command_factory import CommandFactory
 from command.commands import Command, CommandBase
-from command.lexer import Lexer
+from parsing.lexer import Lexer
 
 
 class ParsingError(Exception):

@@ -1,13 +1,13 @@
 import sys
 
-from command.lexer import Lexer
-from command.parser import Parser, ParsingError
+from parsing.lexer import Lexer
+from parsing.parser import Parser, ParsingError
 from command.command_factory import CommandFactory
-from executor import executor
+from executor.executor import Executor, CODE_EXIT
 
 
 class Interpreter:
-    def __init__(self, executor: executor.Executor, command_factory: CommandFactory):
+    def __init__(self, executor: Executor, command_factory: CommandFactory):
         self._executor = executor
         self._command_factory = command_factory
 
@@ -19,8 +19,8 @@ class Interpreter:
             try:
                 lexer = Lexer(command_line)
                 commands = Parser(lexer, self._command_factory).parse_program()
-                result = self._executor.execute(commands)
-                if result == executor.CODE_EXIT:
+                code_return = self._executor.execute(commands)
+                if code_return == CODE_EXIT:
                     return
             except ParsingError as e:
                 print(e, file=sys.stderr)

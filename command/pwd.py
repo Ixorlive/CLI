@@ -1,14 +1,15 @@
-import io
-from command.command_base import CommandBase
-from typing import List
+import os
+from command.command_base import *
 
 
 class Pwd(CommandBase):
     def execute(
         self,
         args: List[str],
-        input_stream: io.StringIO,
-        output_stream: io.StringIO,
-        error_stream: io.StringIO,
-    ):
-        pass
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
+    ) -> int:
+        output_stream.write(os.getcwd())
+        output_stream.write("\n")
+        return CODE_OK
