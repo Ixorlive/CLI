@@ -1,7 +1,10 @@
+import os
+
 import pytest
 import io
 
 from command import commands
+from environment.context_provider import ContextProvider
 
 
 @pytest.mark.parametrize(
@@ -39,5 +42,51 @@ def test_echo(args, expected_output, expected_return_code):
     assert command.execute(args, input_stream, output_stream, error_stream) == expected_return_code
     output_stream.seek(0)
     assert output_stream.read() == expected_output
+    error_stream.seek(0)
+    assert error_stream.readline() == ''
+
+
+@pytest.mark.parametrize(
+    "args, expected_output, expected_return_code",
+    [
+        ([], os.getcwd(), commands.CODE_OK),
+    ],
+)
+def test_pwd(args, expected_output, expected_return_code):
+    command = commands.Pwd()
+    input_stream = io.StringIO()
+    output_stream = io.StringIO()
+    error_stream = io.StringIO()
+    assert command.execute(args, input_stream, output_stream, error_stream) == expected_return_code
+    output_stream.seek(0)
+    assert output_stream.read() == expected_output
+    error_stream.seek(0)
+    assert error_stream.readline() == ''
+
+
+def test_exit():
+    command = commands.Exit()
+    input_stream = io.StringIO()
+    output_stream = io.StringIO()
+    error_stream = io.StringIO()
+    assert command.execute([], input_stream, output_stream, error_stream) == commands.CODE_EXIT
+    output_stream.seek(0)
+    assert output_stream.read() == ''
+    error_stream.seek(0)
+    assert error_stream.readline() == ''
+
+
+def test_assign():
+    context_provider = ContextProvider()
+    var_name = "VAR_NAME"
+    var_value = "100"
+    command = commands.Assign(var_name, var_value, context_provider)
+    input_stream = io.StringIO()
+    output_stream = io.StringIO()
+    error_stream = io.StringIO()
+    assert command.execute([], input_stream, output_stream, error_stream) == commands.CODE_OK
+    assert context_provider.get_variable(var_name) == var_value
+    output_stream.seek(0)
+    assert output_stream.read() == ''
     error_stream.seek(0)
     assert error_stream.readline() == ''
