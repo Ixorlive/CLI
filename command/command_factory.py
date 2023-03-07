@@ -1,7 +1,12 @@
 from command import commands
+from environment.context_provider import ContextProvider
 
 
 class CommandFactory:
+
+    def __init__(self, context: ContextProvider):
+        self.context_provider = context
+
     def create_command_base(self, command_name: str, **args) -> commands.CommandBase:
         if command_name == "cat":
             return commands.Cat()
@@ -13,6 +18,6 @@ class CommandFactory:
             return commands.Pwd()
         elif command_name == "=":
             return commands.Assign(
-                var_name=args["var_name"], var_value=args["var_value"]
+                self.context_provider, var_name=args["var_name"], var_value=args["var_value"]
             )
         return commands.External(command_name)

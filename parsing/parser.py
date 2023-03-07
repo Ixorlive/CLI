@@ -1,7 +1,7 @@
 from typing import List
 
 from command.commands import CommandBase, Command
-from command.lexer import Lexer, Token
+from parsing.lexer import Lexer
 from command.command_factory import CommandFactory
 
 
@@ -10,9 +10,9 @@ class ParsingError(Exception):
 
 
 class Parser:
-    def __init__(self, lexer: Lexer):
+    def __init__(self, command_factory: CommandFactory, lexer: Lexer):
         self.lexer = lexer
-        self.command_factory = CommandFactory()
+        self.command_factory = command_factory
 
     def parse_program(self) -> List[Command]:
         commands: List[Command] = []
