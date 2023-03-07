@@ -43,15 +43,15 @@ class Cat(CommandBase):
         error_stream: TextIO,
     ) -> int:
         if len(args) == 0:
-            error_stream.write("cat: file not specified")
-            return executor.COMMAND_ERROR
+            error_stream.write("cat: file not specified\n")
+            return executor.INTERNAL_COMMAND_ERROR
         filename = args[0]
         try:
             with open(filename, "r") as inf:
                 shutil.copyfileobj(inf, output_stream)
         except FileNotFoundError:
-            error_stream.write(f"cat: {filename}: file not found")
-            return executor.COMMAND_ERROR
+            error_stream.write(f"cat: {filename}: file not found\n")
+            return executor.INTERNAL_COMMAND_ERROR
 
 
 class Echo(CommandBase):
@@ -62,7 +62,7 @@ class Echo(CommandBase):
         output_stream: TextIO,
         error_stream: TextIO,
     ) -> int:
-        output_stream.write(" ".join(args))
+        output_stream.write(" ".join(args) + "\n")
         return executor.CODE_OK
 
 
@@ -136,8 +136,8 @@ class External(CommandBase):
         # TODO чтение из input_stream пока не работает
         path_to_command = shutil.which(self._command_name)
         if path_to_command is None:
-            error_stream.write(f"{self._command_name}: command not found")
-            return executor.COMMAND_ERROR
+            error_stream.write(f"{self._command_name}: command not found\n")
+            return executor.INTERNAL_COMMAND_ERROR
         completed_process = subprocess.run(
             [path_to_command] + args,
             capture_output=True,
