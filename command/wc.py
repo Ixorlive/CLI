@@ -32,7 +32,7 @@ class Wc(CommandBase):
                 + "{:>8}".format(str(text_statistic.count_words))
                 + "{:>8}".format(str(text_statistic.utf8len))
             )
-            output_stream.write('\n')
+            output_stream.write("\n")
         else:
             files_statistic = self._wc_files(args)
             # last row is "total" - it have max value -> max len (or result have only one file)
