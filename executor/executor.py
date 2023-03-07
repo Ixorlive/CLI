@@ -13,9 +13,9 @@ class Executor:
             output_stream=sys.stdout,
             error_stream=sys.stderr,
         )
-        if result == CODE_EXIT:
-            if len(commands) == 1:
-                return CODE_EXIT
-            else:
-                return CODE_OK
-        return 0
+        # if result == CODE_EXIT:
+        #     if len(commands) == 1:
+        #         return CODE_EXIT
+        #     else:
+        #         return CODE_OK
+        return result
