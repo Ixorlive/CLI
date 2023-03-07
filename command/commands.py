@@ -57,6 +57,7 @@ class Cat(CommandBase):
         except FileNotFoundError:
             error_stream.write(f"cat: {filename}: file not found\n")
             return INTERNAL_COMMAND_ERROR
+        return CODE_OK
 
 
 class Echo(CommandBase):
