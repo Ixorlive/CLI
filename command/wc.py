@@ -2,10 +2,6 @@ from typing import NamedTuple
 from command.command_base import *
 
 
-def utf8len(s):
-    return len(s.encode("utf-8"))
-
-
 class TextResult(NamedTuple):
     count_lines: int
     count_words: int
@@ -54,20 +50,10 @@ class Wc(CommandBase):
         return CODE_OK
 
     def _wc_base(self, text: str) -> TextResult:
-        count_lines = 0
-        count_words = 0
-        word_started = False
-        for c in text:
-            if c == "\n":
-                count_lines += 1
-                count_words += 1 if word_started else 0
-                word_started = False
-                continue
-            elif c == " " and word_started:
-                count_words += 1
-            word_started = c != " "
-        count_words += 1 if word_started else 0
-        return TextResult(count_lines, count_words, utf8len(text))
+        count_lines = text.count('\n')
+        count_words = len(text.split())
+        utf8_len = len(text.encode('utf-8'))
+        return TextResult(count_lines, count_words, utf8_len)
 
     def _wc_files(self, file_paths: List[str]) -> List[FileResult]:
         all_results = []
