@@ -145,7 +145,5 @@ def test_command_executed_failure():
     )
     assert result == 1
     assert os.fdopen(output_r, "r").read() == ""
-    assert (
-        os.fdopen(error_r, "r").read()
-        == "/usr/bin/cat: not_file: Нет такого файла или каталога\n"
-    )
+    # Вывод зависит от локали, поэтому используется startswith
+    assert os.fdopen(error_r, "r").read().startswith("/usr/bin/cat: not_file: ")
