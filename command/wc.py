@@ -50,9 +50,9 @@ class Wc(CommandBase):
         return CODE_OK
 
     def _wc_base(self, text: str) -> TextResult:
-        count_lines = text.count('\n')
+        count_lines = text.count("\n")
         count_words = len(text.split())
-        utf8_len = len(text.encode('utf-8'))
+        utf8_len = len(text.encode("utf-8"))
         return TextResult(count_lines, count_words, utf8_len)
 
     def _wc_files(self, file_paths: List[str]) -> List[FileResult]:
@@ -64,8 +64,8 @@ class Wc(CommandBase):
                     result = self._wc_base(file.read())
                     all_results.append(FileResult(file_path, result))
 
-                    total[0] += result.count_words
-                    total[1] += result.count_lines
+                    total[0] += result.count_lines
+                    total[1] += result.count_words
                     total[2] += result.utf8len
             except FileNotFoundError:
                 all_results.append(f"wc: {file_path}: No such file or directory")
