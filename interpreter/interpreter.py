@@ -12,10 +12,8 @@ class Interpreter:
         self._command_factory = command_factory
 
     def run(self):
-        # TODO возможно стоит читать строчку аргумент пока кавычки не закрыты?
         while True:
             command_line = input("$ ")
-            # фаза 2: preprocessing
             try:
                 lexer = Lexer(command_line)
                 commands = Parser(lexer, self._command_factory).parse_program()
