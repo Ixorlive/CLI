@@ -29,6 +29,7 @@ class External(CommandBase):
         reading_input = multiprocessing.Process(
             target=_communicate, args=(input_stream.fileno(), proc.stdin.fileno())
         )
+        # TODO: E       io.UnsupportedOperation: fileno: in WSL ubuntu, tests/test_commands.py:124:
         writing_output = multiprocessing.Process(
             target=_communicate, args=(proc.stdout.fileno(), output_stream.fileno())
         )
