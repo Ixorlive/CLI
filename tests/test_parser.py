@@ -2,11 +2,11 @@ from typing import Tuple
 
 import pytest
 
+from command.command_factory import CommandFactory
 from command.commands import *
+from environment.context_provider import ContextProvider
 from parsing.lexer import Lexer
 from parsing.parser import Parser, ParsingError
-from command.command_factory import CommandFactory
-from environment.context_provider import ContextProvider
 
 
 @pytest.mark.parametrize(

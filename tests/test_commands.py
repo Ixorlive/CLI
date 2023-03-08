@@ -1,7 +1,7 @@
+import io
 import os
 
 import pytest
-import io
 
 from command import commands
 

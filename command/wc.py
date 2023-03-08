@@ -1,4 +1,5 @@
 from typing import NamedTuple
+
 from command.command_base import *
 
 

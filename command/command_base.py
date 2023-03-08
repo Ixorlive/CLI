@@ -1,7 +1,5 @@
-import io
-from typing import List, TextIO
 from abc import ABC, abstractmethod
-
+from typing import List, TextIO
 
 CODE_OK = 0
 CODE_EXIT = -1

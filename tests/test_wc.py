@@ -1,6 +1,8 @@
 from io import StringIO
+
 import pytest
-from command.wc import Wc, TextResult, FileResult
+
+from command.wc import FileResult, TextResult, Wc
 
 
 @pytest.mark.parametrize(

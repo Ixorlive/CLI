@@ -1,6 +1,7 @@
 import sys
-from command.commands import Command
+
 from command.command_base import *
+from command.commands import Command
 
 
 class Executor:

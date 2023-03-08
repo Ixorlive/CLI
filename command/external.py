@@ -1,7 +1,8 @@
 import multiprocessing
-import subprocess
-import shutil
 import os
+import shutil
+import subprocess
+
 from command.command_base import *
 
 

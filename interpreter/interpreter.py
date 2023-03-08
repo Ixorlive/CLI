@@ -1,9 +1,9 @@
 import sys
 
+from command.command_factory import CommandFactory
+from executor.executor import CODE_EXIT, Executor
 from parsing.lexer import Lexer
 from parsing.parser import Parser, ParsingError
-from command.command_factory import CommandFactory
-from executor.executor import Executor, CODE_EXIT
 
 
 class Interpreter:

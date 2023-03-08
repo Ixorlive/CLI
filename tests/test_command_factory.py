@@ -1,8 +1,7 @@
 import pytest
 
-from command.command_factory import CommandFactory
-from environment.context_provider import ContextProvider
 from command import commands
+from command.command_factory import CommandFactory
 
 
 @pytest.mark.parametrize(

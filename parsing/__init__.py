@@ -1,4 +1,4 @@
-import parsing.parser
-from parsing.parser import *
 import parsing.lexer
+import parsing.parser
 from parsing.lexer import *
+from parsing.parser import *
