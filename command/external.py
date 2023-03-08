@@ -29,7 +29,6 @@ class External(CommandBase):
         reading_input = multiprocessing.Process(
             target=_communicate, args=(input_stream.fileno(), proc.stdin.fileno())
         )
-        # TODO: E       io.UnsupportedOperation: fileno: in WSL ubuntu, tests/test_commands.py:124:
         writing_output = multiprocessing.Process(
             target=_communicate, args=(proc.stdout.fileno(), output_stream.fileno())
         )
@@ -44,8 +43,8 @@ class External(CommandBase):
             proc.wait()
         finally:
             reading_input.kill()
-            writing_output.kill()
-            errors_output.kill()
+            writing_output.join()
+            errors_output.join()
 
         return proc.returncode
 
@@ -57,7 +56,7 @@ def _communicate(src, dst):
     sys.stdout = os.fdopen(dst, "w")
     while True:
         try:
-            command_input = sys.stdin.read()
+            command_input = input()
             print(command_input)
         except EOFError:
             return

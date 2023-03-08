@@ -113,17 +113,40 @@ def test_assign():
     assert error_stream.readline() == ""
 
 
+@pytest.mark.skipif(
+    os.name == "nt", reason="external commands don't work correctly on windows"
+)
 def test_command_executed_successfully():
-    if os.name == "nt":
-        return
-    external = commands.External("cat")
+    command = commands.External("cat")
     args = ["tests/data/cat_data.txt"]
-    input_stream = io.StringIO()
-    output_stream = io.StringIO()
-    error_stream = io.StringIO()
-    result = external.execute(args, input_stream, output_stream, error_stream)
+    input_r, input_w = os.pipe()
+    output_r, output_w = os.pipe()
+    error_r, error_w = os.pipe()
+
+    result = command.execute(
+        args, os.fdopen(input_r, "r"), os.fdopen(output_w, "w"), os.fdopen(error_w, "w")
+    )
     assert result == commands.CODE_OK
-    output_stream.seek(0)
-    assert output_stream.read() == "Hello World\n"
-    error_stream.seek(0)
-    assert error_stream.read() == ""
+    assert os.fdopen(output_r, "r").read() == "aaa\nbbb\n"
+    assert os.fdopen(error_r, "r").read() == ""
+
+
+@pytest.mark.skipif(
+    os.name == "nt", reason="external commands don't work correctly on windows"
+)
+def test_command_executed_failure():
+    command = commands.External("cat")
+    args = ["not_file"]
+    input_r, input_w = os.pipe()
+    output_r, output_w = os.pipe()
+    error_r, error_w = os.pipe()
+
+    result = command.execute(
+        args, os.fdopen(input_r, "r"), os.fdopen(output_w, "w"), os.fdopen(error_w, "w")
+    )
+    assert result == 1
+    assert os.fdopen(output_r, "r").read() == ""
+    assert (
+        os.fdopen(error_r, "r").read()
+        == "/usr/bin/cat: not_file: Нет такого файла или каталога\n"
+    )
