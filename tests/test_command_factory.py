@@ -17,8 +17,8 @@ from command import commands
         ("bash", commands.External, {}),
     ],
 )
-def test_create_command_base(command_name, command_base_class, args):
-    context_provider = ContextProvider()
+def test_create_command_base(mocker, command_name, command_base_class, args):
+    context_provider = mocker.MagicMock()
     command_factory = CommandFactory(context_provider)
     base = command_factory.create_command_base(command_name, **args)
     assert isinstance(base, command_base_class)

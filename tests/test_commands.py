@@ -4,13 +4,11 @@ import pytest
 import io
 
 from command import commands
-from environment.context_provider import ContextProvider
 
 
 @pytest.mark.parametrize(
     "args, expected_output, expected_errors, expected_return_code",
     [
-        # ([], "", "cat: file not specified\n", commands.INTERNAL_COMMAND_ERROR),
         (["tests/data/cat_data.txt"], "aaa\nbbb\n", "", commands.CODE_OK),
         (
             ["not_file"],
@@ -94,10 +92,11 @@ def test_exit():
     assert error_stream.readline() == ""
 
 
-def test_assign():
-    context_provider = ContextProvider()
+def test_assign(mocker):
+    context_provider = mocker.MagicMock()
     var_name = "VAR_NAME"
     var_value = "100"
+    context_provider.get_variable.return_value = var_value
     command = commands.Assign(var_name, var_value, context_provider)
     input_stream = io.StringIO()
     output_stream = io.StringIO()

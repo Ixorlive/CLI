@@ -1,6 +1,5 @@
 from io import StringIO
 import pytest
-import os
 from command.wc import Wc, TextResult, FileResult
 
 
@@ -82,7 +81,6 @@ def test_wc_execute_text(args, input_text, expected_output):
         args,
         input_stream=StringIO(input_text),
         output_stream=output_stream,
-        error_stream=None,
+        error_stream=StringIO(),
     )
     assert output_stream.getvalue() == expected_output
-    # assert true
