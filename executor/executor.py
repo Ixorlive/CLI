@@ -5,7 +5,20 @@ from command.commands import Command
 
 
 class Executor:
+    """
+    Class responsible for executing a list of commands.
+    """
+
     def execute(self, commands: List[Command]) -> int:
+        """
+        Executes a list of Command objects.
+
+        Args:
+        - commands (List[Command]): A list of Command objects to be executed.
+
+        Returns:
+        - int: The exit code of the last executed command.
+        """
         if len(commands) == 0:
             return CODE_OK
         result = commands[0].execute(

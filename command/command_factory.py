@@ -3,10 +3,24 @@ from environment.context_provider import ContextProvider
 
 
 class CommandFactory:
+    """
+    The class implements the creation of commands
+    """
+
     def __init__(self, context_provider: ContextProvider):
         self._context_provider = context_provider
 
     def create_command_base(self, command_name: str, **args) -> commands.CommandBase:
+        """
+        Create a CommandBase object based on the given command name and arguments.
+
+        Args:
+            command_name (str): The name of the command to create.
+            **args: Any additional arguments needed to create the command.
+
+        Returns:
+            CommandBase: The created CommandBase object.
+        """
         if command_name == "cat":
             return commands.Cat()
         elif command_name == "echo":

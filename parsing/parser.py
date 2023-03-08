@@ -6,6 +6,8 @@ from parsing.lexer import Lexer
 
 
 class ParsingError(Exception):
+    """An error raised when there is a problem parsing a command."""
+
     pass
 
 
@@ -15,6 +17,12 @@ class Parser:
         self.command_factory = command_factory
 
     def parse_program(self) -> List[Command]:
+        """
+        Parse a program from the tokens produced by the lexer.
+
+        Returns:
+            List[Command]: The list of parsed commands.
+        """
         commands: List[Command] = []
         args: List[str] = []
         command = None

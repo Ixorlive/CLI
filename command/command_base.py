@@ -7,6 +7,10 @@ INTERNAL_COMMAND_ERROR = -2
 
 
 class CommandBase(ABC):
+    """
+    Abstract base class for defining command line commands.
+    """
+
     @abstractmethod
     def execute(
         self,

@@ -4,17 +4,29 @@ from command.command_base import *
 
 
 class TextResult(NamedTuple):
+    """
+    A NamedTuple representing the results of analyzing a text.
+    """
+
     count_lines: int
     count_words: int
     utf8len: int
 
 
 class FileResult(NamedTuple):
+    """
+    A NamedTuple representing the results of analyzing a file.
+    """
+
     filename: str
     text_result: TextResult
 
 
 class Wc(CommandBase):
+    """
+    A class that implements the 'wc' command.
+    """
+
     def execute(
         self,
         args: List[str],
@@ -22,6 +34,18 @@ class Wc(CommandBase):
         output_stream: TextIO,
         error_stream: TextIO,
     ):
+        """
+        Executes the 'wc' command with the given arguments and input/output streams.
+
+        Args:
+            args: A list of command arguments.
+            input_stream: The input stream to read from.
+            output_stream: The output stream to write to.
+            error_stream: The error stream to write to.
+
+        Returns:
+            A status code representing the result of the command execution.
+        """
         if not args:
             text_statistic = self._wc_base(input_stream.read())
             output_stream.write(
@@ -51,12 +75,30 @@ class Wc(CommandBase):
         return CODE_OK
 
     def _wc_base(self, text: str) -> TextResult:
+        """
+        Analyzes the given text and returns a TextResult object representing the results.
+
+        Args:
+            text: The text to analyze.
+
+        Returns:
+            A TextResult object representing the results of the analysis.
+        """
         count_lines = text.count("\n")
         count_words = len(text.split())
         utf8_len = len(text.encode("utf-8"))
         return TextResult(count_lines, count_words, utf8_len)
 
     def _wc_files(self, file_paths: List[str]) -> List[FileResult]:
+        """
+        Analyzes the given files and returns a list of FileResult and error message strings.
+
+        Args:
+            file_paths: A list of file paths to analyze.
+
+        Returns:
+            A list of FileResult and error message strings.
+        """
         all_results = []
         total = [0, 0, 0]
         for file_path in file_paths:

@@ -7,11 +7,23 @@ from parsing.parser import Parser, ParsingError
 
 
 class Interpreter:
+    """
+    A command-line interpreter that reads commands from the user, parses them,
+    creates the corresponding command objects, and executes them using an
+    Executor instance.
+    """
+
     def __init__(self, executor: Executor, command_factory: CommandFactory):
         self._executor = executor
         self._command_factory = command_factory
 
     def run(self):
+        """
+        Runs the interpreter in a loop, reading commands from the user, parsing
+        them, creating the corresponding command objects, and executing them
+        using the executor. If an error occurs during parsing or execution, an
+        error message is printed to the error stream.
+        """
         while True:
             command_line = input("$ ")
             try:

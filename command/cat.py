@@ -4,6 +4,15 @@ from command.command_base import *
 
 
 class Cat(CommandBase):
+    """
+    A command that concatenates and displays the contents of files.
+
+    If no arguments are provided, it reads from the standard input and writes to the standard output.
+    If file arguments are provided, it reads each file and writes their contents to the standard output.
+
+    If a file is not found, it writes an error message to the error stream and returns an error code.
+    """
+
     def execute(
         self,
         args: List[str],
