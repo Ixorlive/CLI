@@ -42,9 +42,9 @@ def test_executor_pipes(mocker, monkeypatch, capfd):
     commands_output = []
 
     def fake_execute(
-            input_stream: TextIO,
-            output_stream: TextIO,
-            error_stream: TextIO,
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         nonlocal commands_input, commands_output
         input_data = input_stream.read()
@@ -56,8 +56,8 @@ def test_executor_pipes(mocker, monkeypatch, capfd):
 
     executor = Executor()
     mock_commands = [mocker.MagicMock() for _ in range(command_number)]
-    stdin_data = 'stdin_data\n'
-    monkeypatch.setattr('sys.stdin', io.StringIO(stdin_data))
+    stdin_data = "stdin_data\n"
+    monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
 
     for mock in mock_commands:
         mock.execute = fake_execute
@@ -69,4 +69,3 @@ def test_executor_pipes(mocker, monkeypatch, capfd):
     out, err = capfd.readouterr()
     assert out == commands_output[-1]
     assert err == ""
-
