@@ -4,6 +4,7 @@ from command.command_factory import CommandFactory
 from executor.executor import CODE_EXIT, Executor
 from parsing.lexer import Lexer
 from parsing.parser import Parser, ParsingError
+from parsing.preprocessing import Preprocessor
 
 
 class Interpreter:
@@ -13,9 +14,14 @@ class Interpreter:
     Executor instance.
     """
 
-    def __init__(self, executor: Executor, command_factory: CommandFactory):
+    def __init__(
+            self, executor: Executor,
+            command_factory: CommandFactory,
+            preprocessor: Preprocessor
+    ):
         self._executor = executor
         self._command_factory = command_factory
+        self._preprocessor = preprocessor
 
     def run(self):
         """
@@ -27,6 +33,7 @@ class Interpreter:
         while True:
             command_line = input("$ ")
             try:
+                command_line = self._preprocessor.preprocess(command_line)
                 lexer = Lexer(command_line)
                 commands = Parser(lexer, self._command_factory).parse_program()
                 code_return = self._executor.execute(commands)
