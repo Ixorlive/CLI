@@ -15,9 +15,10 @@ class Interpreter:
     """
 
     def __init__(
-            self, executor: Executor,
-            command_factory: CommandFactory,
-            preprocessor: Preprocessor
+        self,
+        executor: Executor,
+        command_factory: CommandFactory,
+        preprocessor: Preprocessor,
     ):
         self._executor = executor
         self._command_factory = command_factory

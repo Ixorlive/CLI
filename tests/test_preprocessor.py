@@ -16,8 +16,8 @@ def test_simple_substitution():
 def test_simple_in_single_quotes():
     cp = ContextProvider()
     pp = Preprocessor(cp)
-    input_line = "My name is \'$name\' and I am \'$age\' years old"
-    expected_output = "My name is \'$name\' and I am \'$age\' years old"
+    input_line = "My name is '$name' and I am '$age' years old"
+    expected_output = "My name is '$name' and I am '$age' years old"
     assert pp.preprocess(input_line) == expected_output
 
 
@@ -31,26 +31,34 @@ def test_simple_back_slash():
 
 
 @pytest.mark.parametrize(
-    "input_line, expected_line", [
-        ("echo \"$test,abc,$test_t asdf,$test12_\"", "echo \"hello,abc,hello1 asdf,hello2\""),
+    "input_line, expected_line",
+    [
+        (
+            'echo "$test,abc,$test_t asdf,$test12_"',
+            'echo "hello,abc,hello1 asdf,hello2"',
+        ),
         ("echo '$test, $test_t' $test12_", "echo '$test, $test_t' hello2"),
-        ("echo \"$123\"", "echo \"23\""),
-        ("echo \"hello $ asdf\"", "echo \"hello $ asdf\""),
-        ("echo \"$test$\"", "echo \"hello$\""),
+        ('echo "$123"', 'echo "23"'),
+        ('echo "hello $ asdf"', 'echo "hello $ asdf"'),
+        ('echo "$test$"', 'echo "hello$"'),
         # no support substitutions yet =(
         # ("echo \"${test}abc${test_t} asdf ${test12_}\"", "echo \"helloabchello1 asdf hello2\""),
         # ("echo \"$test${test_t}$test12_\"", "echo \"hellohello1hello2\""),
         # ("echo \"$test+${test_t}_$test12_\"", "echo \"hello+hello1_hello2\""),
         # ("echo '$test+${test_t}_$test12_'", "echo '$test+${test_t}_$test12_'"),
-        ("echo \"$test's $test12_\"", "echo \"hello's hello2\""),
+        ('echo "$test\'s $test12_"', 'echo "hello\'s hello2"'),
         ("echo '\"$test\" is a test'", "echo '\"$test\" is a test'"),
         ("echo 'test \\$test'", "echo 'test \\$test'"),
-        ("echo \"test \\$test\"", "echo \"test $test\""),
-        ("echo \"single '$test' quotes '$test_t' inside double '$test12_'\"",
-         "echo \"single 'hello' quotes 'hello1' inside double 'hello2'\""),
-        ("echo 'double \"$test\" quotes \"$test_t\" inside single \"$test12_\"'\"",
-         "echo 'double \"$test\" quotes \"$test_t\" inside single \"$test12_\"'\"")
-    ]
+        ('echo "test \\$test"', 'echo "test $test"'),
+        (
+            "echo \"single '$test' quotes '$test_t' inside double '$test12_'\"",
+            "echo \"single 'hello' quotes 'hello1' inside double 'hello2'\"",
+        ),
+        (
+            'echo \'double "$test" quotes "$test_t" inside single "$test12_"\'"',
+            'echo \'double "$test" quotes "$test_t" inside single "$test12_"\'"',
+        ),
+    ],
 )
 def test_preprocessor(input_line: str, expected_line: str):
     context: ContextProvider = ContextProvider()
