@@ -32,6 +32,9 @@ class Lexer(Iterable):
         lexer = shlex.shlex(input_line, posix=True)
         lexer.whitespace_split = True
         tokens = []
+        # TODO ввод "adjas'" вылетает с ValueError: No closing quotation хотелось бы
+        #  чтобы была ошибка лексера на это (либо можно читать stdin пока пользователь
+        #  не закроет кавычку)
         for token in lexer:
             if token.isdigit():
                 tokens.append(Token(type="INTEGER", value=token))
