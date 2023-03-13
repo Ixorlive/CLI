@@ -44,6 +44,9 @@ class Preprocessor:
             else:
                 result += input_str
                 break
+        if self._in_single_quotes or self._in_double_quotes:
+            # error will be in lexer, idk what to do
+            self._in_single_quotes = self._in_double_quotes = False
         return result
 
     def _find_pos(self, src_str: str) -> int:
