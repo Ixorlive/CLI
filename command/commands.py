@@ -10,6 +10,7 @@ from command.exit import Exit
 from command.external import External
 from command.pwd import Pwd
 from command.wc import Wc
+from command.grep import Grep
 
 # =======================================
 
