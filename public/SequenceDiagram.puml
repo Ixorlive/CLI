@@ -13,6 +13,7 @@ participant Executor
 participant Command
 participant ContextProvider
 
+activate User
 activate Interpreter
 loop
 User -> Interpreter : command line
@@ -22,10 +23,10 @@ activate Preprocessor
 alt There are variables that need to be substituted
     Preprocessor -> ContextProvider : getVariable
     activate ContextProvider
-    Preprocessor <-- ContextProvider : variable value
+    Preprocessor <<-- ContextProvider : variable value
     deactivate ContextProvider
 end
-Interpreter <-- Preprocessor : preprocessed\ncommand line
+Interpreter <<-- Preprocessor : preprocessed\ncommand line
 deactivate Preprocessor
 
 
@@ -33,16 +34,17 @@ Interpreter -> Parser : command line
 activate Parser
 Parser -> Lexer : command line
 activate Lexer
-Parser <-- Lexer : lexems
+Parser <<-- Lexer : lexems
 deactivate Lexer
 
 loop commands lexems
     Parser -> CommandFactory : command lexems
     activate CommandFactory
-    Parser <-- CommandFactory : command
+    CommandFactory -> Command **
+    Parser <<-- CommandFactory : command
     deactivate CommandFactory
 end
-Interpreter <-- Parser : commands
+Interpreter <<-- Parser : commands
 deactivate Parser
 
 Interpreter -> Executor : commands
@@ -53,17 +55,18 @@ loop commands
     alt command is\nassignment
         Command -> ContextProvider : setVariable
         activate ContextProvider
-        Command <-- ContextProvider
+        Command <<-- ContextProvider
         deactivate ContextProvider
     end
-    Executor <-- Command
+    Executor <<-- Command
     deactivate Command
+    Executor -> Command !!
 end
-Interpreter <-- Executor
+Interpreter <<-- Executor
 deactivate Executor
 
 
-User <-- Interpreter : command output
+User <<-- Interpreter : command output
 end
 
 @enduml
