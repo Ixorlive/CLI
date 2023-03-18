@@ -1,0 +1,72 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+skinparam style strictuml
+actor User
+participant Interpreter
+participant Preprocessor
+participant Parser
+participant Lexer
+participant CommandFactory
+participant Executor
+participant Command
+participant ContextProvider
+
+activate User
+activate Interpreter
+loop
+User -> Interpreter : command line
+
+Interpreter -> Preprocessor : command line
+activate Preprocessor
+alt There are variables that need to be substituted
+    Preprocessor -> ContextProvider : getVariable
+    activate ContextProvider
+    Preprocessor <<-- ContextProvider : variable value
+    deactivate ContextProvider
+end
+Interpreter <<-- Preprocessor : preprocessed\ncommand line
+deactivate Preprocessor
+
+
+Interpreter -> Parser : command line
+activate Parser
+Parser -> Lexer : command line
+activate Lexer
+Parser <<-- Lexer : lexems
+deactivate Lexer
+
+loop commands lexems
+    Parser -> CommandFactory : command lexems
+    activate CommandFactory
+    CommandFactory -> Command **
+    Parser <<-- CommandFactory : command
+    deactivate CommandFactory
+end
+Interpreter <<-- Parser : commands
+deactivate Parser
+
+Interpreter -> Executor : commands
+activate Executor
+loop commands
+    Executor -> Command : execute
+    activate Command
+    alt command is\nassignment
+        Command -> ContextProvider : setVariable
+        activate ContextProvider
+        Command <<-- ContextProvider
+        deactivate ContextProvider
+    end
+    Executor <<-- Command
+    deactivate Command
+    Executor -> Command !!
+end
+Interpreter <<-- Executor
+deactivate Executor
+
+
+User <<-- Interpreter : command output
+end
+
+@enduml
