@@ -112,38 +112,49 @@ def test_assign(mocker):
     assert error_stream.readline() == ""
 
 
-@pytest.mark.skipif(
-    os.name == "nt", reason="external commands don't work correctly on windows"
-)
-def test_command_executed_successfully():
+@pytest.mark.skipif(os.name == "nt", reason="there is no cat on windows")
+def test_external_command_executed_successfully():
     command = commands.External("cat")
     args = ["tests/data/cat_data.txt"]
-    input_r, input_w = os.pipe()
-    output_r, output_w = os.pipe()
-    error_r, error_w = os.pipe()
+    input_stream = io.StringIO()
+    output_stream = io.StringIO()
+    error_stream = io.StringIO()
 
-    result = command.execute(
-        args, os.fdopen(input_r, "r"), os.fdopen(output_w, "w"), os.fdopen(error_w, "w")
-    )
+    result = command.execute(args, input_stream, output_stream, error_stream)
     assert result == commands.CODE_OK
-    assert os.fdopen(output_r, "r").read() == "aaa\nbbb\n"
-    assert os.fdopen(error_r, "r").read() == ""
+    output_stream.seek(0)
+    assert output_stream.read() == "aaa\nbbb\n"
+    error_stream.seek(0)
+    assert error_stream.read() == ""
 
 
-@pytest.mark.skipif(
-    os.name == "nt", reason="external commands don't work correctly on windows"
-)
-def test_command_executed_failure():
+@pytest.mark.skipif(os.name == "nt", reason="there is no cat on windows")
+def test_external_command_executed_failure():
     command = commands.External("cat")
     args = ["not_file"]
-    input_r, input_w = os.pipe()
-    output_r, output_w = os.pipe()
-    error_r, error_w = os.pipe()
+    input_stream = io.StringIO()
+    output_stream = io.StringIO()
+    error_stream = io.StringIO()
 
-    result = command.execute(
-        args, os.fdopen(input_r, "r"), os.fdopen(output_w, "w"), os.fdopen(error_w, "w")
-    )
+    result = command.execute(args, input_stream, output_stream, error_stream)
     assert result == 1
-    assert os.fdopen(output_r, "r").read() == ""
-    # Вывод зависит от локали, поэтому используется startswith
-    assert os.fdopen(error_r, "r").read().startswith("/usr/bin/cat: not_file: ")
+    output_stream.seek(0)
+    assert output_stream.read() == ""
+    error_stream.seek(0)
+    assert error_stream.read().startswith("/usr/bin/cat: not_file: ")
+
+
+@pytest.mark.skipif(os.name != "nt", reason="test for windows")
+def test_external_command_executed_successfully():
+    command = commands.External("cmd")
+    args = ["/c", "path"]
+    input_stream = io.StringIO()
+    output_stream = io.StringIO()
+    error_stream = io.StringIO()
+
+    result = command.execute(args, input_stream, output_stream, error_stream)
+    assert result == commands.CODE_OK
+    output_stream.seek(0)
+    assert output_stream.read().startswith("PATH=")
+    error_stream.seek(0)
+    assert error_stream.read() == ""

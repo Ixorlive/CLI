@@ -1,7 +1,7 @@
-import multiprocessing
 import os
 import shutil
 import subprocess
+import sys
 
 from command.command_base import *
 
@@ -40,32 +40,22 @@ class External(CommandBase):
         if path_to_command is None:
             error_stream.write(f"{self._command_name}: command not found\n")
             return INTERNAL_COMMAND_ERROR
-        proc = subprocess.Popen(
-            [path_to_command] + args,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        reading_input = multiprocessing.Process(
-            target=_communicate, args=(input_stream.fileno(), proc.stdin.fileno())
-        )
-        writing_output = multiprocessing.Process(
-            target=_communicate, args=(proc.stdout.fileno(), output_stream.fileno())
-        )
-        errors_output = multiprocessing.Process(
-            target=_communicate, args=(proc.stderr.fileno(), error_stream.fileno())
-        )
-        reading_input.start()
-        writing_output.start()
-        errors_output.start()
-
-        try:
-            proc.wait()
-        finally:
-            reading_input.kill()
-            writing_output.join()
-            errors_output.join()
-
+        if input_stream is sys.stdin:
+            proc = subprocess.run(
+                [path_to_command] + args,
+                stdin=sys.stdin,
+                stdout=output_stream,
+                stderr=error_stream,
+            )
+        else:
+            proc = subprocess.run(
+                [path_to_command] + args,
+                input=input_stream.read().encode(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            output_stream.write(proc.stdout.decode())
+            error_stream.write(proc.stderr.decode())
         return proc.returncode
 
 
