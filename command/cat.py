@@ -31,4 +31,7 @@ class Cat(CommandBase):
             except FileNotFoundError:
                 error_stream.write(f"cat: {arg}: No such file or directory\n")
                 return INTERNAL_COMMAND_ERROR
+            except OSError:
+                error_stream.write(f"cat: {arg}: Couldn't open file\n")
+                return INTERNAL_COMMAND_ERROR
         return CODE_OK
