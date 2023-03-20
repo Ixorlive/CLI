@@ -29,7 +29,9 @@ class Grep(CommandBase):
         """
         parser = argparse.ArgumentParser(prog="grep", add_help=False)
         parser.add_argument("pattern", type=str, help="the pattern to find")
-        parser.add_argument("file", metavar="FILE", help="the files to search")
+        parser.add_argument(
+            "file", metavar="FILE", nargs="?", const=None, help="the files to search"
+        )
         parser.add_argument(
             "-w",
             "--word-regexp",
@@ -61,14 +63,24 @@ class Grep(CommandBase):
         if parsed_args.word_regexp:
             pattern = rf"\b{parsed_args.pattern}\b"
 
-        with open(parsed_args.file, "r") as file:
+        if not parsed_args.file:
             counter = 0
-            for line in file.readlines():
+            for line in input_stream:
                 if counter > 0:
                     counter -= 1
                     output_stream.write(line)
                 elif re.search(pattern, line, flags) is not None:
                     output_stream.write(line)
                     counter = parsed_args.A
+        else:
+            with open(parsed_args.file, "r") as file:
+                counter = 0
+                for line in file.readlines():
+                    if counter > 0:
+                        counter -= 1
+                        output_stream.write(line)
+                    elif re.search(pattern, line, flags) is not None:
+                        output_stream.write(line)
+                        counter = parsed_args.A
 
         return CODE_OK
