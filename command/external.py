@@ -20,11 +20,11 @@ class External(CommandBase):
         self._command_name = command_name
 
     def execute(
-            self,
-            args: List[str],
-            input_stream: TextIO,
-            output_stream: TextIO,
-            error_stream: TextIO,
+        self,
+        args: List[str],
+        input_stream: TextIO,
+        output_stream: TextIO,
+        error_stream: TextIO,
     ) -> int:
         """
         Executes the external command with the specified arguments and input/output streams.
