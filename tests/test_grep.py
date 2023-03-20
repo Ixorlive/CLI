@@ -54,28 +54,28 @@ def test_with_regex(regex_input: str, args: List[str], expected_output: str):
     "args, expected_output",
     [
         (
-            ["-w", "operator", "test/data/grep_test.txt"],
+            ["-w", "operator", "tests/data/grep_test.txt"],
             "concurrent::FunctionId::operator bool() const { return ptr_ != nullptr; }\n"
             "bool FunctionId::operator==(const FunctionId& other) const {\n"
             "std::size_t FunctionId::Hash::operator()(FunctionId id) const noexcept {\n"
             "AsyncEventSubscriberScope& AsyncEventSubscriberScope::operator=(\n",
         ),
         (
-            ["t$", "data/grep_test.txt"],
+            ["t$", "tests/data/grep_test.txt"],
             "    AsyncEventSubscriberScope&& scope) noexcept\n"
             "}  // namespace concurrent\n",
         ),
         (
-            ["-i", "namespace", "test/data/grep_test.txt"],
+            ["-i", "namespace", "tests/data/grep_test.txt"],
             "USERVER_NAMESPACE_BEGIN\n"
             "namespace concurrent {\n"
             "namespace impl {\n"
             "}  // namespace impl\n"
             "}  // namespace concurrent\n"
-            "USERVER_NAMESPACE_END",
+            "USERVER_NAMESPACE_END\n",
         ),
         (
-            ["-A", "1", "hash", "test/data/grep_test.txt"],
+            ["-A", "1", "hash", "tests/data/grep_test.txt"],
             "  return std::hash<void*>{}(id.ptr_);\n" "}\n",
         ),
     ],
