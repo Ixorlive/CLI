@@ -118,9 +118,9 @@ class Grep(CommandBase):
     ) -> None:
         counter = 0
         for line in input_stream.readlines():
-            if counter > 0:
-                counter -= 1
-                output_stream.write(line)
-            elif re.search(pattern, line, flags) is not None:
+            if re.search(pattern, line, flags) is not None:
                 output_stream.write(line)
                 counter = num_of_context_lines
+            elif counter > 0:
+                counter -= 1
+                output_stream.write(line)
