@@ -84,7 +84,7 @@ class Grep(CommandBase):
         return CODE_OK
 
     def _setup_parser(self) -> CustomArgumentParser:
-        parser = CustomArgumentParser(prog="grep", add_help=False, exit_on_error=False)
+        parser = CustomArgumentParser(prog="grep", add_help=False)
         parser.add_argument("pattern", type=str, help="the pattern to find")
         parser.add_argument(
             "file", metavar="FILE", nargs="?", const=None, help="the files to search"
