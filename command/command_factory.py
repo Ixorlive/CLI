@@ -31,6 +31,10 @@ class CommandFactory:
             return commands.Pwd()
         elif command_name == "grep":
             return commands.Grep()
+        elif command_name == "ls":
+            return commands.Ls()
+        elif command_name == "cd":
+            return commands.Cd()
         elif command_name == "exit":
             return commands.Exit()
         elif command_name == "=":
