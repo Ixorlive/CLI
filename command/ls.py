@@ -32,7 +32,7 @@ class Ls(CommandBase):
         else:
             for filename in args:
                 if not os.path.exists(filename):
-                    output_stream.write(f"ls: cannot access '{filename}': No such file or directory\n")
+                    error_stream.write(f"ls: cannot access '{filename}': No such file or directory\n")
                     continue
 
                 files = self._listdir_nohidden(filename)

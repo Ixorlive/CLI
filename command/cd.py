@@ -28,11 +28,14 @@ class Cd(CommandBase):
         if len(args) == 0:
             os.chdir(os.path.expanduser("~"))
         elif len(args) > 1:
-            output_stream.write(f"cd: too many arguments\n")
+            error_stream.write(f"cd: too many arguments\n")
+            return INTERNAL_COMMAND_ERROR
         elif not os.path.exists(args[0]):
-            output_stream.write(f"cd: {args[0]}: No such file or directory\n")
+            error_stream.write(f"cd: {args[0]}: No such file or directory\n")
+            return INTERNAL_COMMAND_ERROR
         elif not os.path.isdir(args[0]):
-            output_stream.write(f"cd: {args[0]}: Not a directory\n")
+            error_stream.write(f"cd: {args[0]}: Not a directory\n")
+            return INTERNAL_COMMAND_ERROR
         else:
             os.chdir(args[0])
 
