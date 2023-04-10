@@ -11,7 +11,8 @@ from command.external import External
 from command.pwd import Pwd
 from command.wc import Wc
 from command.grep import Grep
-
+from command.ls import Ls
+from command.cd import Cd
 # =======================================
 
 CODE_OK = 0
